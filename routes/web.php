@@ -31,8 +31,12 @@ use App\Http\Controllers\AuthController;
 // });
 // use App\Http\Controllers\AuthController;
 
+
+
+
 // Registration Routes
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register.form');
+Route::get('/showUsers', [AuthController::class, 'showUsers']);
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 // Login Routes

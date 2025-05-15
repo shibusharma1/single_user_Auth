@@ -9,7 +9,7 @@
     <ul id="userList"></ul>
 
     <script>
-        fetch('/api/user-list')
+        fetch('http://127.0.0.1:8000/api/index')
             .then(response => response.json())
             .then(data => {
                 let list = document.getElementById('userList');

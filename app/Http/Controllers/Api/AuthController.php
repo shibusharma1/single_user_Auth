@@ -1,53 +1,54 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
-    public function showUsers()
-    {
-        return view('users');
-        // $response = Http::get('http://127.0.0.1:8000/api/index');
-
-        // if ($response->successful()) {
-        //     $users = $response->json(); // array of users
-        //     return $users;
-            
-        //     // return view('users', compact('users'));
-        // } else {
-        //     return "API Error: " . $response->status();
-        // }
-    }
     // Show Registration Form
     public function showRegistrationForm()
     {
         return view('auth.register');
     }
+   public function index()
+    {
+        $users = User::all();
+        return response($users);
 
+        // return view('auth.register');
+    }
     // Handle Registration
     public function register(Request $request)
     {
+        try{
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:6',
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'email'    => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        Auth::login($user);
+        // Auth::login($user);
 
-        return redirect()->route('dashboard');
+
+        return response($user,201);
+        }catch(\Exception $e){
+            return $e;
+            
+        }
+
+        // return redirect()->route('dashboard');
     }
 
     // Show Login Form
@@ -60,7 +61,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
 
